@@ -1,0 +1,32 @@
+[2026-01-02 20:16:19,972] [INFO] Logging to file: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/logs/training/train_yolov11n_20260102_201619.log
+[2026-01-02 20:16:19,972] [INFO] ============================================================
+[2026-01-02 20:16:19,972] [INFO] Starting Training
+[2026-01-02 20:16:19,972] [INFO] ============================================================
+[2026-01-02 20:16:23,710] [INFO] Loading pretrained model: yolo11n.pt
+[2026-01-02 20:16:27,050] [INFO] Model initialized successfully
+[2026-01-02 20:16:27,050] [INFO] Training Configuration:
+[2026-01-02 20:16:27,050] [INFO]   data: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/data/dataset.yaml
+[2026-01-02 20:16:27,050] [INFO]   epochs: 100
+[2026-01-02 20:16:27,050] [INFO]   batch: 16
+[2026-01-02 20:16:27,050] [INFO]   imgsz: 640
+[2026-01-02 20:16:27,050] [INFO]   workers: 8
+[2026-01-02 20:16:27,050] [INFO]   optimizer: AdamW
+[2026-01-02 20:16:27,050] [INFO]   lr0: 0.001
+[2026-01-02 20:16:27,050] [INFO]   weight_decay: 0.0005
+[2026-01-02 20:16:27,050] [INFO]   momentum: 0.937
+[2026-01-02 20:16:27,050] [INFO]   warmup_epochs: 3
+[2026-01-02 20:16:27,050] [INFO]   warmup_momentum: 0.8
+[2026-01-02 20:16:27,051] [INFO]   warmup_bias_lr: 0.1
+[2026-01-02 20:16:27,051] [INFO]   patience: 20
+[2026-01-02 20:16:27,051] [INFO]   save_period: 10
+[2026-01-02 20:16:27,051] [INFO]   save: True
+[2026-01-02 20:16:27,051] [INFO]   device: 0
+[2026-01-02 20:16:27,051] [INFO]   amp: True
+[2026-01-02 20:16:27,051] [INFO]   project: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/logs/checkpoints
+[2026-01-02 20:16:27,051] [INFO]   name: yolov11n_20260102_201619
+[2026-01-02 20:16:27,051] [INFO]   exist_ok: True
+[2026-01-02 20:16:27,051] [INFO]   verbose: True
+[2026-01-02 20:16:27,051] [INFO]   plots: True
+[2026-01-02 20:16:27,051] [INFO]   cos_lr: True
+[2026-01-02 20:16:27,051] [INFO] Starting training loop...
+[2026-01-02 20:16:38,021] [ERROR] Training failed: CUDA out of memory. Tried to allocate 34.00 MiB. GPU 0 has a total capacity of 3.63 GiB of which 30.94 MiB is free. Including non-PyTorch memory, this process has 3.58 GiB memory in use. Of the allocated memory 3.40 GiB is allocated by PyTorch, and 92.87 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

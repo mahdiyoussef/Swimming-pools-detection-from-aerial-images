@@ -1,0 +1,4 @@
+.env
+kaggle.json
+venv
+/data

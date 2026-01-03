@@ -1,0 +1,41 @@
+#!/bin/bash
+# Swimming Pool Detection System - Setup Script
+# Creates virtual environment, installs dependencies, and activates venv
+
+set -e
+
+echo "============================================"
+echo "  Swimming Pool Detection - Setup"
+echo "============================================"
+
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m'
+
+# Check Python
+if ! command -v python3 &> /dev/null; then
+    echo -e "${RED}Error: Python 3 is not installed${NC}"
+    exit 1
+fi
+
+echo -e "${GREEN}[1/3]${NC} Creating virtual environment..."
+python3 -m venv venv
+
+echo -e "${GREEN}[2/3]${NC} Activating virtual environment..."
+source venv/bin/activate
+
+echo -e "${GREEN}[3/3]${NC} Installing dependencies..."
+pip install --upgrade pip --quiet
+pip install -r requirements.txt
+
+echo ""
+echo "============================================"
+echo -e "${GREEN}  Setup Complete!${NC}"
+echo "============================================"
+echo ""
+echo "Virtual environment is now active."
+echo "To reactivate later: source venv/bin/activate"
+echo ""
+
+# Keep the venv active by starting a new shell
+exec bash --rcfile <(echo "source venv/bin/activate")

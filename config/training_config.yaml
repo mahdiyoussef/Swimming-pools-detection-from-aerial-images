@@ -1,0 +1,79 @@
+# Training Configuration for Swimming Pool Detection
+# Author: Swimming Pool Detection Team
+# Date: 2026-01-02
+
+# Model configuration
+model:
+  variant: "yolov11n"  # Options: yolov11n, yolov11s, yolov11m, yolov11l, yolov11x
+  pretrained: true
+  pretrained_weights: null  # Path to custom pretrained weights, null for default
+  num_classes: 1
+
+# Training hyperparameters
+training:
+  epochs: 100
+  batch_size: 4  # Reduced for GTX 1650 (3.6GB VRAM)
+  image_size: 512  # Reduced for memory
+  workers: 4
+
+# Optimizer settings
+optimizer:
+  name: "AdamW"
+  learning_rate: 0.001
+  weight_decay: 0.0005
+  momentum: 0.937
+  warmup_epochs: 3
+  warmup_momentum: 0.8
+  warmup_bias_lr: 0.1
+
+# Learning rate scheduler
+scheduler:
+  name: "cosine"
+  min_lr: 0.0001
+
+# Early stopping
+early_stopping:
+  enabled: true
+  patience: 20
+  min_delta: 0.001
+  monitor: "val/mAP50"
+  mode: "max"
+
+# Checkpointing
+checkpoint:
+  save_period: 10
+  save_best: true
+  save_last: true
+  max_checkpoints: 5
+
+# Logging
+logging:
+  tensorboard: true
+  log_dir: "logs"
+  log_frequency: 10
+  verbose: true
+
+# Device settings
+device:
+  cuda: true
+  device_id: "0"
+  amp: false  # Disabled for GTX 1650 compatibility
+
+# Loss weights
+loss:
+  box: 7.5
+  cls: 0.5
+  dfl: 1.5
+
+# Validation settings
+validation:
+  val_frequency: 1
+  conf_threshold: 0.001
+  iou_threshold: 0.7
+  max_detections: 300
+
+# Data paths (relative to project root)
+paths:
+  dataset_yaml: "data/dataset.yaml"
+  output_dir: "logs/checkpoints"
+  tensorboard_dir: "logs/tensorboard"

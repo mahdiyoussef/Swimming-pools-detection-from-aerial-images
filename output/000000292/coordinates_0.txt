@@ -1,0 +1,7 @@
+Pool Detection Coordinates
+Confidence: 0.8127
+Boundary Points:
+36,0
+69,0
+69,39
+36,39

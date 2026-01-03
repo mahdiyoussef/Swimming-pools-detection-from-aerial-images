@@ -1,0 +1,55 @@
+# Dataset Configuration for Swimming Pool Detection
+# Author: Swimming Pool Detection Team
+# Date: 2026-01-02
+
+# Data paths
+data:
+  root_path: "data"
+  raw_path: "data/raw"
+  processed_path: "data/processed"
+  annotations_path: "data/annotations"
+  splits_path: "data/splits"
+
+# Dataset sources
+sources:
+  kaggle:
+    dataset_name: "alexj21/swimming-pool-512x512"
+    enabled: true
+  roboflow:
+    workspace: "detection-opefo"
+    project: "swimming_pool"
+    version: 1
+    format: "yolov11"
+    enabled: false
+
+# Data splits
+splits:
+  train_ratio: 0.70
+  val_ratio: 0.20
+  test_ratio: 0.10
+  random_seed: 42
+  stratify: true
+
+# Image settings
+image:
+  width: 640
+  height: 640
+  channels: 3
+  format: "jpg"
+
+# Augmentation settings
+augmentation:
+  enabled: true
+  horizontal_flip: true
+  vertical_flip: true
+  rotation_limit: 15
+  brightness_limit: 0.2
+  contrast_limit: 0.2
+  scale_limit: 0.2
+  mosaic: true
+  mosaic_probability: 0.5
+
+# Class definitions
+classes:
+  - name: "swimming_pool"
+    id: 0

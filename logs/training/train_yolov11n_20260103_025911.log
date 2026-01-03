@@ -1,0 +1,62 @@
+[2026-01-03 02:59:11,917] [INFO] Logging to file: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/logs/training/train_yolov11n_20260103_025911.log
+[2026-01-03 02:59:11,917] [INFO] ============================================================
+[2026-01-03 02:59:11,917] [INFO] Starting Training
+[2026-01-03 02:59:11,917] [INFO] ============================================================
+[2026-01-03 02:59:15,475] [INFO] Loading pretrained model: yolo11n.pt
+[2026-01-03 02:59:15,546] [INFO] Model initialized successfully
+[2026-01-03 02:59:15,546] [INFO] Training Configuration:
+[2026-01-03 02:59:15,546] [INFO]   data: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/data/dataset.yaml
+[2026-01-03 02:59:15,546] [INFO]   epochs: 100
+[2026-01-03 02:59:15,546] [INFO]   batch: 4
+[2026-01-03 02:59:15,546] [INFO]   imgsz: 512
+[2026-01-03 02:59:15,546] [INFO]   workers: 4
+[2026-01-03 02:59:15,547] [INFO]   optimizer: AdamW
+[2026-01-03 02:59:15,547] [INFO]   lr0: 0.001
+[2026-01-03 02:59:15,547] [INFO]   weight_decay: 0.0005
+[2026-01-03 02:59:15,547] [INFO]   momentum: 0.937
+[2026-01-03 02:59:15,547] [INFO]   warmup_epochs: 3
+[2026-01-03 02:59:15,547] [INFO]   warmup_momentum: 0.8
+[2026-01-03 02:59:15,547] [INFO]   warmup_bias_lr: 0.1
+[2026-01-03 02:59:15,547] [INFO]   patience: 20
+[2026-01-03 02:59:15,547] [INFO]   save_period: 10
+[2026-01-03 02:59:15,547] [INFO]   save: True
+[2026-01-03 02:59:15,547] [INFO]   device: 0
+[2026-01-03 02:59:15,547] [INFO]   amp: False
+[2026-01-03 02:59:15,547] [INFO]   project: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/logs/checkpoints
+[2026-01-03 02:59:15,547] [INFO]   name: yolov11n_20260103_025911
+[2026-01-03 02:59:15,547] [INFO]   exist_ok: True
+[2026-01-03 02:59:15,547] [INFO]   verbose: True
+[2026-01-03 02:59:15,547] [INFO]   plots: True
+[2026-01-03 02:59:15,547] [INFO]   cos_lr: True
+[2026-01-03 02:59:15,547] [INFO] Starting training loop...
+[2026-01-03 03:39:32,448] [INFO] ============================================================
+[2026-01-03 03:39:32,448] [INFO] Training Complete
+[2026-01-03 03:39:32,448] [INFO] ============================================================
+[2026-01-03 03:39:32,448] [INFO] Training Results:
+[2026-01-03 03:39:32,449] [ERROR] Training failed: 'Metric' object has no attribute 'get'. See valid attributes below.
+Class for computing evaluation metrics for Ultralytics YOLO models.
+
+    Attributes:
+        p (list): Precision for each class. Shape: (nc,).
+        r (list): Recall for each class. Shape: (nc,).
+        f1 (list): F1 score for each class. Shape: (nc,).
+        all_ap (list): AP scores for all classes and all IoU thresholds. Shape: (nc, 10).
+        ap_class_index (list): Index of class for each AP score. Shape: (nc,).
+        nc (int): Number of classes.
+
+    Methods:
+        ap50: AP at IoU threshold of 0.5 for all classes.
+        ap: AP at IoU thresholds from 0.5 to 0.95 for all classes.
+        mp: Mean precision of all classes.
+        mr: Mean recall of all classes.
+        map50: Mean AP at IoU threshold of 0.5 for all classes.
+        map75: Mean AP at IoU threshold of 0.75 for all classes.
+        map: Mean AP at IoU thresholds from 0.5 to 0.95 for all classes.
+        mean_results: Mean of results, returns mp, mr, map50, map.
+        class_result: Class-aware result, returns p[i], r[i], ap50[i], ap[i].
+        maps: mAP of each class.
+        fitness: Model fitness as a weighted combination of metrics.
+        update: Update metric attributes with new evaluation results.
+        curves: Provides a list of curves for accessing specific metrics like precision, recall, F1, etc.
+        curves_results: Provide a list of results for accessing specific metrics like precision, recall, F1, etc.
+    
