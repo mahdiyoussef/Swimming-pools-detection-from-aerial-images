@@ -1,19 +1,20 @@
 # Training Configuration for Swimming Pool Detection
 # Author: Swimming Pool Detection Team
 # Date: 2026-01-02
+# Updated: 2026-01-04 - Added precision improvements
 
 # Model configuration
 model:
-  variant: "yolov11n"  # Options: yolov11n, yolov11s, yolov11m, yolov11l, yolov11x
+  variant: "yolov11s"  # Upgraded from yolov11n for better accuracy
   pretrained: true
   pretrained_weights: null  # Path to custom pretrained weights, null for default
   num_classes: 1
 
 # Training hyperparameters
 training:
-  epochs: 100
-  batch_size: 4  # Reduced for GTX 1650 (3.6GB VRAM)
-  image_size: 512  # Reduced for memory
+  epochs: 200  # Increased for better convergence
+  batch_size: 2  # Reduced for YOLOv11s on GTX 1650
+  image_size: 512
   workers: 4
 
 # Optimizer settings
@@ -34,7 +35,7 @@ scheduler:
 # Early stopping
 early_stopping:
   enabled: true
-  patience: 20
+  patience: 50  # Increased for longer training
   min_delta: 0.001
   monitor: "val/mAP50"
   mode: "max"
@@ -64,6 +65,20 @@ loss:
   box: 7.5
   cls: 0.5
   dfl: 1.5
+
+# Data augmentation (Advanced)
+augmentation:
+  mixup: 0.1  # Blend two images
+  copy_paste: 0.1  # Copy paste augmentation
+  mosaic: 1.0  # Mosaic augmentation
+  hsv_h: 0.015  # HSV-Hue augmentation
+  hsv_s: 0.7  # HSV-Saturation augmentation
+  hsv_v: 0.4  # HSV-Value augmentation
+  degrees: 10.0  # Rotation
+  translate: 0.1  # Translation
+  scale: 0.5  # Scale
+  fliplr: 0.5  # Horizontal flip
+  flipud: 0.1  # Vertical flip (useful for aerial)
 
 # Validation settings
 validation:

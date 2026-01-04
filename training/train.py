@@ -204,6 +204,32 @@ class Trainer:
         if scheduler_config.get("name") == "cosine":
             args["cos_lr"] = True
         
+        # Apply augmentation settings if configured
+        aug_config = self.config.get("augmentation", {})
+        if aug_config:
+            if "mixup" in aug_config:
+                args["mixup"] = aug_config["mixup"]
+            if "copy_paste" in aug_config:
+                args["copy_paste"] = aug_config["copy_paste"]
+            if "mosaic" in aug_config:
+                args["mosaic"] = aug_config["mosaic"]
+            if "hsv_h" in aug_config:
+                args["hsv_h"] = aug_config["hsv_h"]
+            if "hsv_s" in aug_config:
+                args["hsv_s"] = aug_config["hsv_s"]
+            if "hsv_v" in aug_config:
+                args["hsv_v"] = aug_config["hsv_v"]
+            if "degrees" in aug_config:
+                args["degrees"] = aug_config["degrees"]
+            if "translate" in aug_config:
+                args["translate"] = aug_config["translate"]
+            if "scale" in aug_config:
+                args["scale"] = aug_config["scale"]
+            if "fliplr" in aug_config:
+                args["fliplr"] = aug_config["fliplr"]
+            if "flipud" in aug_config:
+                args["flipud"] = aug_config["flipud"]
+        
         # Apply overrides
         args.update(overrides)
         

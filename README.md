@@ -68,9 +68,10 @@ Here are examples of the model detecting swimming pools in aerial imagery:
 | ![Sample 1](test_images/000000079.jpg) | ![Result 1](output/000000079/output_image.jpg) |
 | ![Sample 2](test_images/000000136.jpg) | ![Result 2](output/000000136/output_image.jpg) |
 | ![Sample 3](test_images/000000216.jpg) | ![Result 3](output/000000216/output_image.jpg) |
+| ![Sample 4](test_images/000000292.jpg) | ![Result 4](output/000000292/output_image.jpg) |
+| ![Sample 5](test_images/000000378.jpg) | ![Result 5](output/000000378/output_image.jpg) |
 
-
-The model successfully detects pools of various shapes and sizes with red boundary outlines, but it is not perfect and may miss some pools or detect false positives. 
+The model (YOLOv11s) achieves **97.7% mAP50** and **93.6% precision** on the validation set. 
 
 ### Coordinates File Format
 
@@ -97,7 +98,7 @@ The coordinates represent the bounding box corners (x,y) in pixels.
 | `--input` | required | Input image or directory |
 | `--model` | `weights/best.pt` | Path to model weights |
 | `--output-dir` | `output` | Output directory |
-| `--conf-threshold` | `0.25` | Detection confidence threshold |
+| `--conf-threshold` | `0.5` | Detection confidence threshold |
 | `--img-size` | `640` | Inference image size |
 
 **Example with custom options:**
@@ -114,16 +115,16 @@ python inference/detect_pools.py \
 
 | Attribute | Value |
 |-----------|-------|
-| Architecture | YOLOv11n |
+| Architecture | YOLOv11s |
 | Input Size | 512x512 |
 | Training Images | 856 |
 | Validation Images | 244 |
 | Test Images | 124 |
-| **mAP50** | **0.970** |
-| **mAP50-95** | **0.602** |
-| Precision | 0.925 |
-| Recall | 0.946 |
-| Inference Speed | ~36ms/image (GPU) |
+| **mAP50** | **0.977** |
+| **mAP50-95** | **0.599** |
+| Precision | 0.936 |
+| Recall | 0.942 |
+| Inference Speed | ~25ms/image (GPU) |
 
 ---
 
