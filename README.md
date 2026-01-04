@@ -59,6 +59,37 @@ output/
 
 ---
 
+## Sample Results
+
+Here are examples of the model detecting swimming pools in aerial imagery:
+
+| Input Image | Detection Result |
+|-------------|------------------|
+| ![Sample 1](test_images/000000079.jpg) | ![Result 1](output/000000079/output_image.jpg) |
+| ![Sample 2](test_images/000000136.jpg) | ![Result 2](output/000000136/output_image.jpg) |
+| ![Sample 3](test_images/000000216.jpg) | ![Result 3](output/000000216/output_image.jpg) |
+
+
+The model successfully detects pools of various shapes and sizes with red boundary outlines, but it is not perfect and may miss some pools or detect false positives. 
+
+### Coordinates File Format
+
+Each detected pool generates a `coordinates.txt` file:
+
+```
+Pool Detection Coordinates
+Confidence: 0.8106
+Boundary Points:
+139,75
+175,75
+175,117
+139,117
+```
+
+The coordinates represent the bounding box corners (x,y) in pixels.
+
+---
+
 ## Detection Options
 
 | Option | Default | Description |
