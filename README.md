@@ -18,7 +18,7 @@ The system uses a YOLOv11 model trained on 1,224 aerial images, achieving **97% 
 
 ```bash
 # Clone and enter project
-cd swimming-pool-detection
+cd Swimming-pools-detection-from-aerial-images
 
 # Run setup script (creates venv and installs dependencies)
 ./setup
