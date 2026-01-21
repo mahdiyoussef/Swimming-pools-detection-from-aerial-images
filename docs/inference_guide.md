@@ -56,6 +56,21 @@ results/
 ...
 ```
 
+### Tiled Inference (Large Images)
+
+For massive aerial scenes (e.g., 10000x10000+ pixels), use the `--tiled` flag to process the image in sliding window tiles.
+
+```bash
+python inference/detect_pools.py \
+    --input data/raw/kaggle/TEST_SET_ALPES_MARITIMES.3.png \
+    --model weights/best.pt \
+    --tiled \
+    --tile-size 640 \
+    --tile-overlap 128
+```
+
+This prevents GPU memory errors and ensures high-resolution detection of small pools across large regions.
+
 ### High Precision
 
 ```bash
@@ -80,20 +95,17 @@ python inference/detect_pools.py \
 ### coordinates.txt
 
 ```
-Pool Detection Coordinates
+Pool Segmentation Coordinates
 Confidence: 0.9500
+Shape: oval
+Vertex Count: 14
 Boundary Points:
 123,456
-789,456
-789,234
-123,234
+130,460
+...
 ```
 
-The coordinates represent the four corners of the bounding box:
-1. Top-left (x1, y1)
-2. Top-right (x2, y1)
-3. Bottom-right (x2, y2)
-4. Bottom-left (x1, y2)
+The coordinates represent a variable number of **polygon vertices** (x,y) tracing the actual pool border. The `Shape` field classifies the geometry into `rectangular`, `oval`, or `irregular`.
 
 ### output_image.jpg
 
@@ -107,38 +119,31 @@ Original image with:
 ```python
 from inference.detect_pools import PoolDetector
 from inference.postprocessing import (
-    extract_boundary_coordinates,
-    draw_pool_outline,
-    save_coordinates
+    extract_pool_contour,  # High-precision GrabCut contour
+    draw_pool_mask,       # Colored polygons
+    save_segmentation_coordinates, 
+    classify_pool_shape
 )
 
 # Initialize detector
-detector = PoolDetector(
-    model_path="weights/best.pt",
-    conf_threshold=0.25,
-    iou_threshold=0.45,
-    device="0"
-)
+detector = PoolDetector(model_path="weights/best.pt")
 
 # Run detection
 image, detections = detector.detect("aerial_image.jpg")
 
 # Process each detection
-for det in detections:
+for i, det in enumerate(detections):
     bbox = det["bbox"]
-    confidence = det["confidence"]
     
-    # Get coordinates
-    coords = extract_boundary_coordinates(
-        np.array(bbox),
-        image.shape[:2]
-    )
+    # Extract HIGH-PRECISION contour
+    contour = extract_pool_contour(image, np.array(bbox))
     
-    # Draw outline
-    image = draw_pool_outline(image, coords)
+    # Classify and Draw
+    shape = classify_pool_shape(contour)
+    image = draw_pool_mask(image, contour, color=(0, 0, 255))
     
-    # Save coordinates
-    save_coordinates(coords, "coordinates.txt", confidence)
+    # Save
+    save_segmentation_coordinates(contour, f"coords_{i}.txt", det["confidence"], shape)
 ```
 
 ## Performance Tips
@@ -146,13 +151,13 @@ for det in detections:
 ### Speed Optimization
 
 1. Use GPU: `--device 0`
-2. Use smaller model: `yolov11n.pt`
+2. Use smaller model: `yolo26n.pt`
 3. Reduce image size: `--img-size 416`
 4. Enable TensorRT (if available)
 
 ### Accuracy Optimization
 
-1. Use larger model: `yolov11x.pt`
+1. Use larger model: `yolo26x.pt`
 2. Increase image size: `--img-size 1024`
 3. Lower confidence threshold: `--conf-threshold 0.1`
 4. Tune IoU threshold for your use case
@@ -161,10 +166,10 @@ for det in detections:
 
 | Model | Image Size | GPU | Inference Time |
 |-------|------------|-----|----------------|
-| yolov11n | 640 | RTX 3080 | ~5ms |
-| yolov11s | 640 | RTX 3080 | ~7ms |
-| yolov11m | 640 | RTX 3080 | ~12ms |
-| yolov11l | 640 | RTX 3080 | ~18ms |
-| yolov11x | 640 | RTX 3080 | ~30ms |
+| yolo26n | 640 | RTX 3080 | ~5ms |
+| yolo26s | 640 | RTX 3080 | ~7ms |
+| yolo26m | 640 | RTX 3080 | ~12ms |
+| yolo26l | 640 | RTX 3080 | ~18ms |
+| yolo26x | 640 | RTX 3080 | ~30ms |
 
 *Benchmarks are approximate and depend on hardware*

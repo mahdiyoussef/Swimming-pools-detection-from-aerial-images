@@ -46,7 +46,7 @@ Find matching image-label pairs.
 Split into train/val/test sets.
 
 #### `generate_dataset_yaml(output_path: Path) -> None`
-Generate YOLOv11 dataset.yaml.
+Generate YOLO26 dataset.yaml.
 
 ---
 
@@ -95,13 +95,13 @@ Convert polygon to bounding box.
 
 ## Model Configuration
 
-### YOLOv11Config
+### YOLO26Config
 
 ```python
-from models.yolov11_config import YOLOv11Config
+from models.yolo26_config import YOLO26Config
 
-config = YOLOv11Config(
-    variant="yolov11m",
+config = YOLO26Config(
+    variant="yolo26m",
     num_classes=1,
     pretrained=True
 )
@@ -111,7 +111,7 @@ model = config.create_model()
 **Methods:**
 
 #### `create_model() -> YOLO`
-Create YOLOv11 model instance.
+Create YOLO26 model instance.
 
 #### `get_training_args(**kwargs) -> Dict[str, Any]`
 Get training arguments for model.train().
@@ -181,29 +181,28 @@ image, detections = detector.detect("image.jpg")
 #### `detect(image_path, image_size) -> Tuple[np.ndarray, List[Dict]]`
 Run detection on single image.
 
+#### `detect_tiled(image_path, tile_size, tile_overlap, image_size) -> Tuple[np.ndarray, List[Dict]]`
+Run tiled/sliding window detection on massive images (10000x10000+).
+
 #### `detect_batch(image_dir, image_size) -> Dict[str, List[Dict]]`
 Run detection on directory of images.
 
 ---
 
-### Postprocessing Functions
+#### `extract_pool_contour(image, bbox, epsilon_factor, min_area_ratio) -> List[Tuple[int, int]]`
+High-precision GrabCut-based contour extraction for accurate boundaries.
 
-```python
-from inference.postprocessing import (
-    extract_boundary_coordinates,
-    draw_pool_outline,
-    save_coordinates
-)
-```
+#### `draw_pool_mask(image, polygon, color, alpha, outline_thickness) -> np.ndarray`
+Draw semi-transparent filled mask with high-visibility outline (e.g. Red).
+
+#### `classify_pool_shape(polygon) -> str`
+Classify geometry into `rectangular`, `oval`, `circular`, or `irregular`.
+
+#### `save_segmentation_coordinates(polygon, output_path, confidence, shape) -> None`
+Save extended polygon data with shape classification to text file.
 
 #### `extract_boundary_coordinates(bbox, img_shape) -> List[Tuple[int, int]]`
-Convert bbox to corner coordinates.
-
-#### `draw_pool_outline(image, coordinates, color, thickness) -> np.ndarray`
-Draw blue outline on image.
-
-#### `save_coordinates(coordinates, output_path, confidence) -> None`
-Save coordinates to text file.
+Convert bbox to corner coordinates (fallback).
 
 ---
 

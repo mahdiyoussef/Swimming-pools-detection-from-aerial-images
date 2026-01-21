@@ -19,7 +19,7 @@ sources:
     workspace: "detection-opefo"
     project: "swimming_pool"
     version: 1
-    format: "yolov11"
+    format: "yolov8"  # Compatible format for YOLO26
     enabled: false
 
 # Data splits

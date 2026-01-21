@@ -31,7 +31,7 @@ class DatasetSplitter:
     Split dataset into train, validation, and test sets.
 
     This class handles the complete workflow of splitting image-label pairs
-    while maintaining data integrity and generating YOLOv11-compatible
+    while maintaining data integrity and generating YOLO26-compatible
     dataset configuration.
 
     Attributes:
@@ -242,7 +242,7 @@ class DatasetSplitter:
 
     def generate_dataset_yaml(self, output_path: Path) -> None:
         """
-        Generate YOLOv11-compatible dataset.yaml file.
+        Generate YOLO26-compatible dataset.yaml file.
 
         Args:
             output_path: Path to save the dataset.yaml file.

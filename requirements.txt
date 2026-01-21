@@ -2,7 +2,7 @@
 # Python 3.8+ required
 
 # Core Dependencies
-ultralytics>=8.1.0
+ultralytics>=8.4.0  # YOLO26 requires v8.4.0+
 torch>=2.0.0
 torchvision>=0.15.0
 opencv-python>=4.8.0

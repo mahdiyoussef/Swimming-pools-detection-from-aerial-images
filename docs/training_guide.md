@@ -31,7 +31,7 @@ This creates:
 - `data/splits/train/` - 70% of data
 - `data/splits/val/` - 20% of data
 - `data/splits/test/` - 10% of data
-- `data/dataset.yaml` - YOLOv11 dataset config
+- `data/dataset.yaml` - YOLO26 dataset config
 
 ## Training Configuration
 
@@ -39,7 +39,7 @@ Edit `config/training_config.yaml`:
 
 ```yaml
 model:
-  variant: yolov11m      # Choose: n, s, m, l, x
+  variant: yolo26m      # Choose: n, s, m, l, x
   pretrained: true
 
 training:
@@ -69,7 +69,7 @@ python training/train.py --config config/training_config.yaml
 ```bash
 python training/train.py \
     --config config/training_config.yaml \
-    --model yolov11l \
+    --model yolo26l \
     --epochs 200 \
     --batch-size 8 \
     --img-size 640 \
@@ -89,7 +89,7 @@ python training/train.py \
 ```bash
 python training/train.py \
     --config config/training_config.yaml \
-    --resume logs/checkpoints/yolov11m_20260102_180000/weights/last.pt
+    --resume logs/checkpoints/yolo26m_20260102_180000/weights/last.pt
 ```
 
 ## Monitoring
@@ -170,7 +170,7 @@ augmentation:
 --batch-size 4
 
 # Use smaller model
---model yolov11n
+--model yolo26n
 ```
 
 ### Slow Training

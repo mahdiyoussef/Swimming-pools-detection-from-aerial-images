@@ -3,6 +3,7 @@ Model Validation Script for Swimming Pool Detection System.
 
 Author: Swimming Pool Detection Team
 Date: 2026-01-02
+Updated: 2026-01-21 - Migrated from YOLOv11 to YOLO26
 """
 
 import argparse
@@ -23,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 class Validator:
-    """Model validation for YOLOv11 swimming pool detection."""
+    """Model validation for YOLO26 swimming pool detection."""
 
     def __init__(
         self,
@@ -127,7 +128,7 @@ class Validator:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Validate YOLOv11 model")
+    parser = argparse.ArgumentParser(description="Validate YOLO26 model")
     parser.add_argument("--model", type=str, required=True)
     parser.add_argument("--data", type=str, default=None)
     parser.add_argument("--split", type=str, default="val")

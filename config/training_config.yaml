@@ -1,26 +1,27 @@
-# Training Configuration for Swimming Pool Detection
+# Training Configuration for Swimming Pool Instance Segmentation
 # Author: Swimming Pool Detection Team
 # Date: 2026-01-02
-# Updated: 2026-01-04 - Added precision improvements
+# Updated: 2026-01-21 - Migrated to YOLO26-seg for instance segmentation
 
 # Model configuration
 model:
-  variant: "yolov11s"  # Upgraded from yolov11n for better accuracy
+  variant: "yolo26s"  # YOLO26 Small Detection - fits GTX 1650 4GB
   pretrained: true
   pretrained_weights: null  # Path to custom pretrained weights, null for default
   num_classes: 1
+  task: "detect"  # 'detect' or 'segment' (segment requires polygon annotations)
 
 # Training hyperparameters
 training:
   epochs: 200  # Increased for better convergence
-  batch_size: 2  # Reduced for YOLOv11s on GTX 1650
-  image_size: 512
+  batch_size: 1  # Reduced for GTX 1650 4GB
+  image_size: 640  # Reduced for memory
   workers: 4
 
 # Optimizer settings
 optimizer:
   name: "AdamW"
-  learning_rate: 0.001
+  learning_rate: 0.0003  # Lower LR for segmentation
   weight_decay: 0.0005
   momentum: 0.937
   warmup_epochs: 3
@@ -65,6 +66,7 @@ loss:
   box: 7.5
   cls: 0.5
   dfl: 1.5
+  seg: 1.0  # Segmentation mask loss weight
 
 # Data augmentation (Advanced)
 augmentation:

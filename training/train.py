@@ -1,11 +1,12 @@
 """
 Training Script for Swimming Pool Detection System.
 
-This module handles the complete training pipeline for YOLOv11-based
+This module handles the complete training pipeline for YOLO26-based
 swimming pool detection in aerial imagery.
 
 Author: Swimming Pool Detection Team
 Date: 2026-01-02
+Updated: 2026-01-21 - Migrated from YOLOv11 to YOLO26
 """
 
 import argparse
@@ -28,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 class Trainer:
     """
-    Training orchestrator for YOLOv11 swimming pool detection.
+    Training orchestrator for YOLO26 swimming pool detection.
 
     This class handles the complete training workflow including
     configuration loading, model initialization, training execution,
@@ -37,7 +38,7 @@ class Trainer:
     Attributes:
         config: Training configuration dictionary.
         project_root: Root path of the project.
-        model: YOLOv11 model instance.
+        model: YOLO26 model instance.
     """
 
     def __init__(self, config_path: str) -> None:
@@ -102,7 +103,7 @@ class Trainer:
 
     def _initialize_model(self, model_variant: Optional[str] = None) -> None:
         """
-        Initialize the YOLOv11 model.
+        Initialize the YOLO26 model.
 
         Args:
             model_variant: Override model variant from config.
@@ -112,19 +113,26 @@ class Trainer:
         except ImportError:
             raise ImportError(
                 "ultralytics package not installed. "
-                "Install with: pip install ultralytics"
+                "Install with: pip install ultralytics>=8.4.0"
             )
         
         if model_variant is None:
             model_variant = self.config["model"]["variant"]
         
-        # Map variant to model file
+        # Map variant to model file (detection and segmentation)
         variant_mapping = {
-            "yolov11n": "yolo11n.pt",
-            "yolov11s": "yolo11s.pt",
-            "yolov11m": "yolo11m.pt",
-            "yolov11l": "yolo11l.pt",
-            "yolov11x": "yolo11x.pt",
+            # Detection models
+            "yolo26n": "yolo26n.pt",
+            "yolo26s": "yolo26s.pt",
+            "yolo26m": "yolo26m.pt",
+            "yolo26l": "yolo26l.pt",
+            "yolo26x": "yolo26x.pt",
+            # Segmentation models
+            "yolo26n-seg": "yolo26n-seg.pt",
+            "yolo26s-seg": "yolo26s-seg.pt",
+            "yolo26m-seg": "yolo26m-seg.pt",
+            "yolo26l-seg": "yolo26l-seg.pt",
+            "yolo26x-seg": "yolo26x-seg.pt",
         }
         
         model_file = variant_mapping.get(model_variant)
@@ -346,7 +354,7 @@ class Trainer:
 def parse_arguments() -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(
-        description="Train YOLOv11 for swimming pool detection",
+        description="Train YOLO26 for swimming pool detection",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     
@@ -361,8 +369,11 @@ def parse_arguments() -> argparse.Namespace:
         "--model",
         type=str,
         default=None,
-        choices=["yolov11n", "yolov11s", "yolov11m", "yolov11l", "yolov11x"],
-        help="YOLOv11 model variant (overrides config)"
+        choices=[
+            "yolo26n", "yolo26s", "yolo26m", "yolo26l", "yolo26x",
+            "yolo26n-seg", "yolo26s-seg", "yolo26m-seg", "yolo26l-seg", "yolo26x-seg"
+        ],
+        help="YOLO26 model variant (overrides config)"
     )
     
     parser.add_argument(

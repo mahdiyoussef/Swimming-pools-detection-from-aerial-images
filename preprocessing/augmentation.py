@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 class AugmentationPipeline:
     """
-    Data augmentation pipeline for YOLOv11 training.
+    Data augmentation pipeline for YOLO26 training.
 
     This class provides configurable augmentation transforms
     optimized for aerial swimming pool detection.

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Swimming Pool Detection System uses YOLOv11 for detecting swimming pools in aerial imagery. The architecture is designed for production use with modular components.
+The Swimming Pool Detection System uses YOLO26 for detecting swimming pools in aerial imagery. The architecture is designed for production use with modular components.
 
 ## System Components
 
@@ -18,7 +18,7 @@ The Swimming Pool Detection System uses YOLOv11 for detecting swimming pools in 
 │         │                   │                   │                │
 │         ▼                   ▼                   ▼                │
 │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐       │
-│  │  Kaggle/RF   │    │ Augmentation │    │   YOLOv11    │       │
+│  │  Kaggle/RF   │    │ Augmentation │    │   YOLO26    │       │
 │  │     APIs     │    │  & Splits    │    │    Model     │       │
 │  └──────────────┘    └──────────────┘    └──────────────┘       │
 │                                                 │                │
@@ -26,9 +26,9 @@ The Swimming Pool Detection System uses YOLOv11 for detecting swimming pools in 
 │                            ┌──────────────────────────────┐     │
 │                            │      Inference Pipeline       │     │
 │                            ├──────────────────────────────┤     │
-│                            │  Detection ─▶ Postprocessing  │     │
+│                            │  Detection ─▶ GrabCut Refine  │     │
 │                            │      ▼              ▼         │     │
-│                            │  coordinates.txt  output.jpg  │     │
+│                            │  Polygon.txt      Polygon.jpg │     │
 │                            └──────────────────────────────┘     │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -41,20 +41,20 @@ The Swimming Pool Detection System uses YOLOv11 for detecting swimming pools in 
 2. **Preprocess** - Convert annotations to YOLO format
 3. **Augment** - Apply data augmentation
 4. **Split** - Create train/val/test splits (70/20/10)
-5. **Train** - Train YOLOv11 model
+5. **Train** - Train YOLO26 model
 6. **Validate** - Compute metrics (mAP, precision, recall)
 
 ### Inference Pipeline
 
 1. **Load** - Load trained model weights
 2. **Preprocess** - Resize and normalize input image
-3. **Detect** - Run YOLOv11 inference
-4. **Postprocess** - Extract coordinates, apply NMS
-5. **Output** - Generate coordinates.txt and output_image.jpg
+3. **Detect** - Run YOLO26 inference
+4. **Postprocess** - Extract high-fidelity contours using GrabCut, classify shape, and apply NMS.
+5. **Output** - Generate polygon-based `coordinates.txt` and `output_image.jpg`.
 
-## YOLOv11 Model Architecture
+## YOLO26 Model Architecture
 
-YOLOv11 builds on YOLO evolution with:
+YOLO26 builds on YOLO evolution with:
 
 - **Backbone**: CSPDarknet with attention mechanisms
 - **Neck**: PANet for multi-scale feature fusion

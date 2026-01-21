@@ -33,7 +33,7 @@ class DatasetDownloader:
     Download and organize datasets from Kaggle and Roboflow.
 
     This class handles the complete workflow of downloading, extracting,
-    and organizing datasets for YOLOv11 training.
+    and organizing datasets for YOLO26 training.
 
     Attributes:
         config: Dataset configuration dictionary.
@@ -195,7 +195,7 @@ class DatasetDownloader:
         workspace: Optional[str] = None,
         project: Optional[str] = None,
         version: Optional[int] = None,
-        format_type: str = "yolov11"
+        format_type: str = "yolo26"
     ) -> Path:
         """
         Download dataset from Roboflow.
@@ -204,7 +204,7 @@ class DatasetDownloader:
             workspace: Roboflow workspace name.
             project: Roboflow project name.
             version: Dataset version number.
-            format_type: Export format (default: yolov11).
+            format_type: Export format (default: yolo26).
 
         Returns:
             Path: Path to the downloaded dataset directory.
