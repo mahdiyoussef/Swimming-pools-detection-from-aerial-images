@@ -65,11 +65,10 @@ Here are examples of the model detecting swimming pools in aerial imagery:
 
 | Input Image | Detection Result |
 |-------------|------------------|
-| ![Sample 1](test_images/000000079.jpg) | ![Result 1](output/000000079/output_image.jpg) |
-| ![Sample 2](test_images/000000136.jpg) | ![Result 2](output/000000136/output_image.jpg) |
-| ![Sample 3](test_images/000000216.jpg) | ![Result 3](output/000000216/output_image.jpg) |
-| ![Sample 4](test_images/000000292.jpg) | ![Result 4](output/000000292/output_image.jpg) |
-| ![Sample 5](test_images/000000378.jpg) | ![Result 5](output/000000378/output_image.jpg) |
+| ![Sample 1](test_images/000000136.jpg) | ![Result 1](output/000000136/output_image.jpg) |
+| ![Sample 2](test_images/000000216.jpg) | ![Result 2](output/000000216/output_image.jpg) |
+| ![Sample 3](test_images/000000292.jpg) | ![Result 3](output/000000292/output_image.jpg) |
+| ![Sample 4](test_images/000000378.jpg) | ![Result 4](output/000000378/output_image.jpg) |
 
 The model (YOLO26s) achieves **97.7% mAP50** and **93.6% precision** on the validation set. 
 
