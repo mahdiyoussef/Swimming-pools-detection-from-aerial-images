@@ -1,0 +1,12 @@
+Pool Segmentation Coordinates
+Confidence: 0.7867
+Shape: oval
+Vertex Count: 7
+Boundary Points:
+2098,2745
+2099,2765
+2146,2764
+2150,2758
+2150,2749
+2144,2739
+2114,2739

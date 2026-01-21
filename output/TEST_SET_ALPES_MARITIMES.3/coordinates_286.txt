@@ -1,0 +1,14 @@
+Pool Segmentation Coordinates
+Confidence: 0.7722
+Shape: irregular
+Vertex Count: 9
+Boundary Points:
+5253,5260
+5250,5286
+5277,5293
+5294,5291
+5305,5300
+5326,5302
+5328,5287
+5323,5273
+5262,5258

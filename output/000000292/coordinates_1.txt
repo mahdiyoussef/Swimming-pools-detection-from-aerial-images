@@ -1,7 +1,12 @@
-Pool Detection Coordinates
+Pool Segmentation Coordinates
 Confidence: 0.5384
+Shape: oval
+Vertex Count: 7
 Boundary Points:
-102,97
-161,97
-161,168
-102,168
+124,97
+102,112
+102,121
+129,161
+135,162
+160,145
+138,109

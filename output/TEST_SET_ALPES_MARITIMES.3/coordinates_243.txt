@@ -1,0 +1,14 @@
+Pool Segmentation Coordinates
+Confidence: 0.7860
+Shape: oval
+Vertex Count: 9
+Boundary Points:
+6822,9332
+6817,9325
+6799,9328
+6782,9339
+6784,9345
+6782,9349
+6795,9352
+6819,9343
+6822,9340

@@ -1,0 +1,61 @@
+[2026-01-21 12:05:39,063] [INFO] Logging to file: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/logs/training/train_yolo26m-seg_20260121_120539.log
+[2026-01-21 12:05:39,063] [INFO] ============================================================
+[2026-01-21 12:05:39,063] [INFO] Starting Training
+[2026-01-21 12:05:39,063] [INFO] ============================================================
+[2026-01-21 12:05:42,162] [INFO] Loading pretrained model: yolo26m-seg.pt
+[2026-01-21 12:06:10,690] [INFO] Model initialized successfully
+[2026-01-21 12:06:10,690] [INFO] Training Configuration:
+[2026-01-21 12:06:10,690] [INFO]   data: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/data/dataset.yaml
+[2026-01-21 12:06:10,691] [INFO]   epochs: 200
+[2026-01-21 12:06:10,691] [INFO]   batch: 2
+[2026-01-21 12:06:10,691] [INFO]   imgsz: 1024
+[2026-01-21 12:06:10,691] [INFO]   workers: 4
+[2026-01-21 12:06:10,691] [INFO]   optimizer: AdamW
+[2026-01-21 12:06:10,691] [INFO]   lr0: 0.0003
+[2026-01-21 12:06:10,691] [INFO]   weight_decay: 0.0005
+[2026-01-21 12:06:10,691] [INFO]   momentum: 0.937
+[2026-01-21 12:06:10,691] [INFO]   warmup_epochs: 3
+[2026-01-21 12:06:10,691] [INFO]   warmup_momentum: 0.8
+[2026-01-21 12:06:10,691] [INFO]   warmup_bias_lr: 0.1
+[2026-01-21 12:06:10,691] [INFO]   patience: 50
+[2026-01-21 12:06:10,691] [INFO]   save_period: 10
+[2026-01-21 12:06:10,691] [INFO]   save: True
+[2026-01-21 12:06:10,691] [INFO]   device: 0
+[2026-01-21 12:06:10,691] [INFO]   amp: False
+[2026-01-21 12:06:10,691] [INFO]   project: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/logs/checkpoints
+[2026-01-21 12:06:10,691] [INFO]   name: yolo26m-seg_20260121_120539
+[2026-01-21 12:06:10,691] [INFO]   exist_ok: True
+[2026-01-21 12:06:10,691] [INFO]   verbose: True
+[2026-01-21 12:06:10,691] [INFO]   plots: True
+[2026-01-21 12:06:10,691] [INFO]   cos_lr: True
+[2026-01-21 12:06:10,691] [INFO]   mixup: 0.1
+[2026-01-21 12:06:10,691] [INFO]   copy_paste: 0.1
+[2026-01-21 12:06:10,691] [INFO]   mosaic: 1.0
+[2026-01-21 12:06:10,691] [INFO]   hsv_h: 0.015
+[2026-01-21 12:06:10,691] [INFO]   hsv_s: 0.7
+[2026-01-21 12:06:10,691] [INFO]   hsv_v: 0.4
+[2026-01-21 12:06:10,691] [INFO]   degrees: 10.0
+[2026-01-21 12:06:10,691] [INFO]   translate: 0.1
+[2026-01-21 12:06:10,691] [INFO]   scale: 0.5
+[2026-01-21 12:06:10,691] [INFO]   fliplr: 0.5
+[2026-01-21 12:06:10,691] [INFO]   flipud: 0.1
+[2026-01-21 12:06:10,692] [INFO] Starting training loop...
+[2026-01-21 12:06:14,573] [ERROR] Training failed: Caught IndexError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/home/youssef/Desktop/swimming pools detection/swimming-pool-detection/venv/lib/python3.12/site-packages/torch/utils/data/_utils/worker.py", line 349, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/youssef/Desktop/swimming pools detection/swimming-pool-detection/venv/lib/python3.12/site-packages/torch/utils/data/_utils/fetch.py", line 52, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "/home/youssef/Desktop/swimming pools detection/swimming-pool-detection/venv/lib/python3.12/site-packages/ultralytics/data/base.py", line 376, in __getitem__
+    return self.transforms(self.get_image_and_label(index))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/youssef/Desktop/swimming pools detection/swimming-pool-detection/venv/lib/python3.12/site-packages/ultralytics/data/augment.py", line 187, in __call__
+    data = t(data)
+           ^^^^^^^
+  File "/home/youssef/Desktop/swimming pools detection/swimming-pool-detection/venv/lib/python3.12/site-packages/ultralytics/data/augment.py", line 2067, in __call__
+    sem_masks = cls_tensor[masks[0].long() - 1]  # (H, W) from (1, H, W) instance indices
+                ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+IndexError: index is out of bounds for dimension with size 0
+

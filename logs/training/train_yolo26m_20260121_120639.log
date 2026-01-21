@@ -1,0 +1,43 @@
+[2026-01-21 12:06:39,635] [INFO] Logging to file: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/logs/training/train_yolo26m_20260121_120639.log
+[2026-01-21 12:06:39,635] [INFO] ============================================================
+[2026-01-21 12:06:39,635] [INFO] Starting Training
+[2026-01-21 12:06:39,635] [INFO] ============================================================
+[2026-01-21 12:06:41,507] [INFO] Loading pretrained model: yolo26m.pt
+[2026-01-21 12:07:16,354] [INFO] Model initialized successfully
+[2026-01-21 12:07:16,354] [INFO] Training Configuration:
+[2026-01-21 12:07:16,354] [INFO]   data: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/data/dataset.yaml
+[2026-01-21 12:07:16,354] [INFO]   epochs: 200
+[2026-01-21 12:07:16,354] [INFO]   batch: 2
+[2026-01-21 12:07:16,354] [INFO]   imgsz: 1024
+[2026-01-21 12:07:16,354] [INFO]   workers: 4
+[2026-01-21 12:07:16,354] [INFO]   optimizer: AdamW
+[2026-01-21 12:07:16,354] [INFO]   lr0: 0.0003
+[2026-01-21 12:07:16,354] [INFO]   weight_decay: 0.0005
+[2026-01-21 12:07:16,354] [INFO]   momentum: 0.937
+[2026-01-21 12:07:16,354] [INFO]   warmup_epochs: 3
+[2026-01-21 12:07:16,354] [INFO]   warmup_momentum: 0.8
+[2026-01-21 12:07:16,354] [INFO]   warmup_bias_lr: 0.1
+[2026-01-21 12:07:16,354] [INFO]   patience: 50
+[2026-01-21 12:07:16,355] [INFO]   save_period: 10
+[2026-01-21 12:07:16,355] [INFO]   save: True
+[2026-01-21 12:07:16,355] [INFO]   device: 0
+[2026-01-21 12:07:16,355] [INFO]   amp: False
+[2026-01-21 12:07:16,355] [INFO]   project: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/logs/checkpoints
+[2026-01-21 12:07:16,355] [INFO]   name: yolo26m_20260121_120639
+[2026-01-21 12:07:16,355] [INFO]   exist_ok: True
+[2026-01-21 12:07:16,355] [INFO]   verbose: True
+[2026-01-21 12:07:16,355] [INFO]   plots: True
+[2026-01-21 12:07:16,355] [INFO]   cos_lr: True
+[2026-01-21 12:07:16,355] [INFO]   mixup: 0.1
+[2026-01-21 12:07:16,355] [INFO]   copy_paste: 0.1
+[2026-01-21 12:07:16,355] [INFO]   mosaic: 1.0
+[2026-01-21 12:07:16,355] [INFO]   hsv_h: 0.015
+[2026-01-21 12:07:16,355] [INFO]   hsv_s: 0.7
+[2026-01-21 12:07:16,355] [INFO]   hsv_v: 0.4
+[2026-01-21 12:07:16,355] [INFO]   degrees: 10.0
+[2026-01-21 12:07:16,355] [INFO]   translate: 0.1
+[2026-01-21 12:07:16,355] [INFO]   scale: 0.5
+[2026-01-21 12:07:16,355] [INFO]   fliplr: 0.5
+[2026-01-21 12:07:16,355] [INFO]   flipud: 0.1
+[2026-01-21 12:07:16,355] [INFO] Starting training loop...
+[2026-01-21 12:07:20,617] [ERROR] Training failed: CUDA out of memory. Tried to allocate 48.00 MiB. GPU 0 has a total capacity of 3.63 GiB of which 6.94 MiB is free. Including non-PyTorch memory, this process has 3.61 GiB memory in use. Of the allocated memory 3.46 GiB is allocated by PyTorch, and 63.37 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

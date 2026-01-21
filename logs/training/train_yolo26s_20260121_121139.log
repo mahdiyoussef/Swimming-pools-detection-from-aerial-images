@@ -1,0 +1,52 @@
+[2026-01-21 12:11:39,658] [INFO] Logging to file: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/logs/training/train_yolo26s_20260121_121139.log
+[2026-01-21 12:11:39,658] [INFO] ============================================================
+[2026-01-21 12:11:39,658] [INFO] Starting Training
+[2026-01-21 12:11:39,658] [INFO] ============================================================
+[2026-01-21 12:11:41,532] [INFO] Loading pretrained model: yolo26s.pt
+[2026-01-21 12:11:55,732] [INFO] Model initialized successfully
+[2026-01-21 12:11:55,732] [INFO] Training Configuration:
+[2026-01-21 12:11:55,732] [INFO]   data: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/data/dataset.yaml
+[2026-01-21 12:11:55,732] [INFO]   epochs: 200
+[2026-01-21 12:11:55,732] [INFO]   batch: 1
+[2026-01-21 12:11:55,732] [INFO]   imgsz: 640
+[2026-01-21 12:11:55,732] [INFO]   workers: 4
+[2026-01-21 12:11:55,732] [INFO]   optimizer: AdamW
+[2026-01-21 12:11:55,732] [INFO]   lr0: 0.0003
+[2026-01-21 12:11:55,732] [INFO]   weight_decay: 0.0005
+[2026-01-21 12:11:55,732] [INFO]   momentum: 0.937
+[2026-01-21 12:11:55,732] [INFO]   warmup_epochs: 3
+[2026-01-21 12:11:55,732] [INFO]   warmup_momentum: 0.8
+[2026-01-21 12:11:55,732] [INFO]   warmup_bias_lr: 0.1
+[2026-01-21 12:11:55,732] [INFO]   patience: 50
+[2026-01-21 12:11:55,733] [INFO]   save_period: 10
+[2026-01-21 12:11:55,733] [INFO]   save: True
+[2026-01-21 12:11:55,733] [INFO]   device: 0
+[2026-01-21 12:11:55,733] [INFO]   amp: False
+[2026-01-21 12:11:55,733] [INFO]   project: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/logs/checkpoints
+[2026-01-21 12:11:55,733] [INFO]   name: yolo26s_20260121_121139
+[2026-01-21 12:11:55,733] [INFO]   exist_ok: True
+[2026-01-21 12:11:55,733] [INFO]   verbose: True
+[2026-01-21 12:11:55,733] [INFO]   plots: True
+[2026-01-21 12:11:55,733] [INFO]   cos_lr: True
+[2026-01-21 12:11:55,733] [INFO]   mixup: 0.1
+[2026-01-21 12:11:55,733] [INFO]   copy_paste: 0.1
+[2026-01-21 12:11:55,733] [INFO]   mosaic: 1.0
+[2026-01-21 12:11:55,733] [INFO]   hsv_h: 0.015
+[2026-01-21 12:11:55,733] [INFO]   hsv_s: 0.7
+[2026-01-21 12:11:55,733] [INFO]   hsv_v: 0.4
+[2026-01-21 12:11:55,733] [INFO]   degrees: 10.0
+[2026-01-21 12:11:55,733] [INFO]   translate: 0.1
+[2026-01-21 12:11:55,733] [INFO]   scale: 0.5
+[2026-01-21 12:11:55,733] [INFO]   fliplr: 0.5
+[2026-01-21 12:11:55,733] [INFO]   flipud: 0.1
+[2026-01-21 12:11:55,733] [INFO] Starting training loop...
+[2026-01-21 15:45:08,577] [INFO] ============================================================
+[2026-01-21 15:45:08,577] [INFO] Training Complete
+[2026-01-21 15:45:08,577] [INFO] ============================================================
+[2026-01-21 15:45:08,577] [INFO] Training Results:
+[2026-01-21 15:45:08,577] [INFO]   mAP50: 0.9727
+[2026-01-21 15:45:08,577] [INFO]   mAP50-95: 0.5705
+[2026-01-21 15:45:08,577] [INFO]   Precision: 0.9486
+[2026-01-21 15:45:08,577] [INFO]   Recall: 0.9359
+[2026-01-21 15:45:08,578] [INFO] Best model saved to: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/logs/checkpoints/yolo26s_20260121_121139/weights/best.pt
+[2026-01-21 15:45:08,578] [INFO] Last model saved to: /home/youssef/Desktop/swimming pools detection/swimming-pool-detection/logs/checkpoints/yolo26s_20260121_121139/weights/last.pt

@@ -1,7 +1,24 @@
-Pool Detection Coordinates
+Pool Segmentation Coordinates
 Confidence: 0.8458
+Shape: irregular
+Vertex Count: 19
 Boundary Points:
-139,72
-178,72
-178,117
+147,79
+142,85
+147,109
+139,105
 139,117
+149,117
+151,107
+168,116
+174,106
+166,90
+152,79
+160,85
+152,83
+160,103
+165,97
+173,105
+167,113
+159,111
+144,84
