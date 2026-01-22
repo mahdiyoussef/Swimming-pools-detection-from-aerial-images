@@ -39,8 +39,10 @@ Version: 1.0.0
 # =============================================================================
 
 import logging           # Logging functionality
+import math              # Mathematical operations
+import json              # JSON data handling
 from pathlib import Path # Cross-platform file path handling
-from typing import List, Tuple, Union  # Type hints for better code documentation
+from typing import List, Tuple, Dict, Union  # Type hints
 
 import cv2               # OpenCV for image drawing operations
 import numpy as np       # NumPy for array operations
@@ -722,6 +724,126 @@ def calculate_pool_area(coordinates: List[Tuple[int, int]]) -> float:
     
     # Take absolute value and divide by 2
     return abs(area) / 2.0
+
+
+# =============================================================================
+# GEOSPATIAL FUNCTIONS
+# =============================================================================
+
+def pixel_to_latlng(
+    pixel_coords: List[Tuple[int, int]],
+    origin_lat: float,
+    origin_lng: float,
+    meters_per_pixel: float
+) -> List[Tuple[float, float]]:
+    """
+    Convert pixel coordinates to real-world Latitude and Longitude.
+    
+    Uses a planar approximation suitable for small-scale aerial imagery.
+    Accounts for the convergence of meridians (cosine of latitude).
+    
+    Args:
+        pixel_coords: List of (x, y) coordinates in pixels.
+        origin_lat: Latitude of the top-left corner (pixel 0,0).
+        origin_lng: Longitude of the top-left corner (pixel 0,0).
+        meters_per_pixel: Ground resolution (e.g., 0.3 for 30cm/px).
+        
+    Returns:
+        List of (latitude, longitude) tuples.
+    """
+    # Earth's radius constants in meters
+    DEG_TO_METERS = 111320.0
+    
+    # Calculate scale factors
+    # Latitude degrees are constant: 1 deg ~ 111.32 km
+    lat_scale = meters_per_pixel / DEG_TO_METERS
+    
+    # Longitude degrees vary with latitude: 1 deg ~ 111.32 * cos(lat) km
+    lng_scale = meters_per_pixel / (DEG_TO_METERS * math.cos(math.radians(origin_lat)))
+    
+    geo_coords = []
+    for x, y in pixel_coords:
+        # Note: In screen space, +Y is South (decreasing Lat)
+        # and +X is East (increasing Lng)
+        lat = origin_lat - (y * lat_scale)
+        lng = origin_lng + (x * lng_scale)
+        geo_coords.append((lat, lng))
+        
+    return geo_coords
+
+
+def calculate_real_world_area(
+    pixel_area: float,
+    meters_per_pixel: float
+) -> float:
+    """
+    Convert pixel area to square meters.
+    
+    Args:
+        pixel_area: Area in square pixels.
+        meters_per_pixel: Ground resolution in meters.
+        
+    Returns:
+        Area in square meters.
+    """
+    return pixel_area * (meters_per_pixel ** 2)
+
+
+def save_as_geojson(
+    detections: List[Dict],
+    output_path: str,
+    origin_lat: float,
+    origin_lng: float,
+    meters_per_pixel: float
+) -> None:
+    """
+    Save detections as a GeoJSON FeatureCollection for map visualization.
+    
+    Args:
+        detections: List of detection dictionaries containing "polygon", "confidence", "shape".
+        output_path: Destination file path.
+        origin_lat: Image origin latitude.
+        origin_lng: Image origin longitude.
+        meters_per_pixel: Ground resolution.
+    """
+    features = []
+    
+    for i, det in enumerate(detections):
+        # Convert polygon pixels to Lat/Lng
+        geo_poly = pixel_to_latlng(det["polygon"], origin_lat, origin_lng, meters_per_pixel)
+        
+        # Calculate real area
+        pix_area = calculate_pool_area(det["polygon"])
+        real_area = calculate_real_world_area(pix_area, meters_per_pixel)
+        
+        # GeoJSON expects [Longitude, Latitude] and closed loop
+        coordinates = [[lng, lat] for lat, lng in geo_poly]
+        if coordinates:
+            coordinates.append(coordinates[0]) # Close the loop
+            
+        feature = {
+            "type": "Feature",
+            "id": i,
+            "properties": {
+                "confidence": float(det["confidence"]),
+                "shape": det["shape"],
+                "area_m2": round(real_area, 2),
+                "vertex_count": len(det["polygon"])
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [coordinates]
+            }
+        }
+        features.append(feature)
+        
+    geojson = {
+        "type": "FeatureCollection",
+        "features": features
+    }
+    
+    with open(output_path, "w") as f:
+        json.dump(geojson, f, indent=2)
 
 
 def calculate_pool_dimensions(

@@ -174,7 +174,7 @@ class PoolDetector:
 
     def detect(
         self,
-        image_path: str,
+        image_input,
         image_size: int = 640
     ) -> Tuple[np.ndarray, List[Dict[str, Any]]]:
         """
@@ -185,8 +185,9 @@ class PoolDetector:
         use detect_tiled() instead for better accuracy.
         
         Args:
-            image_path (str): Path to the input image file.
-                Supported formats: .jpg, .jpeg, .png, .bmp
+            image_input: Either a path to an image file (str/Path) OR
+                a numpy array (BGR format) representing the image directly.
+                Supported formats for paths: .jpg, .jpeg, .png, .bmp
             image_size (int, optional): Size to resize image for inference.
                 Larger values = more detail but slower inference.
                 Common values: 416, 512, 640, 1280.
@@ -202,7 +203,7 @@ class PoolDetector:
                     - "class_name": str ("swimming_pool")
         
         Raises:
-            FileNotFoundError: If image_path does not exist.
+            FileNotFoundError: If image_input is a path that does not exist.
             ValueError: If image cannot be loaded (corrupted/unsupported format).
         
         Example:
@@ -210,22 +211,26 @@ class PoolDetector:
             >>> for det in detections:
             ...     print(f"Pool at {det['bbox']} with conf {det['confidence']:.2f}")
         """
-        # Convert to Path object for robust path handling
-        image_path = Path(image_path)
-        
-        # Validate image exists
-        if not image_path.exists():
-            raise FileNotFoundError(f"Image not found: {image_path}")
-        
         # -------------------------------------------------------------------
-        # STEP 1: Load the original image using OpenCV
+        # STEP 1: Load the original image (from path or use array directly)
         # -------------------------------------------------------------------
-        # cv2.imread returns BGR format (Blue, Green, Red)
-        original_image = cv2.imread(str(image_path))
-        
-        # Check if image was loaded successfully
-        if original_image is None:
-            raise ValueError(f"Failed to load image: {image_path}")
+        if isinstance(image_input, np.ndarray):
+            # Input is already a numpy array (e.g., from fetch_map_frame)
+            original_image = image_input
+        else:
+            # Input is a file path
+            image_path = Path(image_input)
+            
+            # Validate image exists
+            if not image_path.exists():
+                raise FileNotFoundError(f"Image not found: {image_path}")
+            
+            # cv2.imread returns BGR format (Blue, Green, Red)
+            original_image = cv2.imread(str(image_path))
+            
+            # Check if image was loaded successfully
+            if original_image is None:
+                raise ValueError(f"Failed to load image: {image_path}")
         
         # -------------------------------------------------------------------
         # STEP 2: Run YOLO26 inference
@@ -233,14 +238,14 @@ class PoolDetector:
         start_time = time.time()  # Start timing
         
         # Run model prediction
-        # - source: input image path
+        # - source: input image (can be path or numpy array)
         # - conf: confidence threshold (filter low-confidence detections)
         # - iou: IoU threshold for NMS (filter overlapping boxes)
         # - imgsz: resize image to this size for inference
         # - device: GPU device or CPU
         # - verbose: suppress ultralytics output
         results = self.model.predict(
-            source=str(image_path),
+            source=original_image,  # Pass the numpy array directly
             conf=self.conf_threshold,
             iou=self.iou_threshold,
             imgsz=image_size,
@@ -725,7 +730,8 @@ def process_single_image(
         extract_pool_contour,           # Extract actual pool contour using CV
         save_coordinates,               # Save coordinates to file
         save_segmentation_coordinates,  # Save polygon coordinates with shape
-        classify_pool_shape             # Classify pool shape
+        classify_pool_shape,            # Classify pool shape
+        save_as_geojson                 # Save as GeoJSON for maps
     )
     
     # Create output directory or clean it if it exists
@@ -756,6 +762,11 @@ def process_single_image(
     # -------------------------------------------------------------------
     # STEP 2: Process each detection - Extract actual pool contours
     # -------------------------------------------------------------------
+    logger.info(f"Detected {len(detections)} swimming pool(s)")
+    
+    # Store processed detections for GeoJSON export
+    processed_detections = []
+    
     for i, detection in enumerate(detections):
         confidence = detection["confidence"]
         has_mask = detection.get("has_mask", False)
@@ -763,19 +774,22 @@ def process_single_image(
         
         # Extract actual pool contour using color-based CV segmentation
         # This produces shape-accurate borders instead of rectangles
-        contour = extract_pool_contour(
+        polygon = extract_pool_contour(
             original_image,
             np.array(bbox),
             epsilon_factor=0.015,  # Smoother contour
-            min_area_ratio=0.1
+            min_area_ratio=0.05
         )
-        
-        # Convert to required format
-        coordinates = [(int(p[0]), int(p[1])) for p in contour]
-        polygon = [[c[0], c[1]] for c in coordinates]
         
         # Classify pool shape based on contour
         shape = classify_pool_shape(polygon)
+        
+        # Store for GeoJSON
+        processed_detections.append({
+            "polygon": polygon,
+            "confidence": confidence,
+            "shape": shape
+        })
         
         # Draw pool contour on image (red outline + faint green mask)
         # Red outline is more visible and requested by user
@@ -795,11 +809,23 @@ def process_single_image(
         save_segmentation_coordinates(polygon, str(coord_path), confidence, shape)
     
     # -------------------------------------------------------------------
-    # STEP 3: Save output image with all detections drawn
+    # STEP 3: Save output image and GeoJSON
     # -------------------------------------------------------------------
     output_image_path = output_dir / "output_image.jpg"
     cv2.imwrite(str(output_image_path), original_image)
     logger.info(f"Saved output image: {output_image_path}")
+    
+    # Save as GeoJSON for map visualization
+    geojson_path = output_dir / "detections.geojson"
+    try:
+        origin_lat = getattr(detector, 'origin_lat', 43.7) # Default: Alpes-Maritimes
+        origin_lng = getattr(detector, 'origin_lng', 7.2)
+        mpp = getattr(detector, 'meters_per_pixel', 0.3)
+        
+        save_as_geojson(processed_detections, str(geojson_path), origin_lat, origin_lng, mpp)
+        logger.info(f"Saved GeoJSON for map: {geojson_path}")
+    except Exception as e:
+        logger.warning(f"Could not save GeoJSON: {e}")
 
 
 # =============================================================================
@@ -908,6 +934,30 @@ def parse_arguments() -> argparse.Namespace:
         help="Overlap between tiles (pixels). More overlap = better boundary detection"
     )
     
+    # -------------------------------------------------------------------------
+    # Geospatial Arguments (for map mapping)
+    # -------------------------------------------------------------------------
+    parser.add_argument(
+        "--lat",
+        type=float,
+        default=43.7,
+        help="Latitude of image top-left corner (default: Alpes-Maritimes region)"
+    )
+    
+    parser.add_argument(
+        "--lng",
+        type=float,
+        default=7.2,
+        help="Longitude of image top-left corner"
+    )
+    
+    parser.add_argument(
+        "--mpp",
+        type=float,
+        default=0.3,
+        help="Meters per pixel resolution (default: 0.3m/px)"
+    )
+    
     return parser.parse_args()
 
 
@@ -954,6 +1004,11 @@ def main() -> None:
         iou_threshold=args.iou_threshold,
         device=args.device
     )
+    
+    # Attach geospatial settings to detector so process_single_image can access them
+    detector.origin_lat = args.lat
+    detector.origin_lng = args.lng
+    detector.meters_per_pixel = args.mpp
     
     # -------------------------------------------------------------------------
     # Process input (file or directory)
