@@ -336,7 +336,7 @@ class PoolDetector:
 
     def detect_tiled(
         self,
-        image_path: str,
+        image_input,
         tile_size: int = 512,
         overlap: int = 64,
         image_size: int = 640
@@ -358,7 +358,8 @@ class PoolDetector:
             6. Apply NMS to remove duplicate detections at tile boundaries
         
         Args:
-            image_path (str): Path to the large input image.
+            image_input: Either a path to an image file (str/Path) OR
+                a numpy array (BGR format) representing the image directly.
             tile_size (int, optional): Width and height of each tile in pixels.
                 Should match or be close to training image size (512 for this model).
                 Defaults to 512.
@@ -388,19 +389,23 @@ class PoolDetector:
             - Processing time scales with number of tiles
             - GPU memory usage is constant (one tile at a time)
         """
-        # Convert to Path object for robust path handling
-        image_path = Path(image_path)
-        
-        # Validate image exists
-        if not image_path.exists():
-            raise FileNotFoundError(f"Image not found: {image_path}")
-        
         # -------------------------------------------------------------------
-        # STEP 1: Load the original image
+        # STEP 1: Load the original image (from path or use array directly)
         # -------------------------------------------------------------------
-        original_image = cv2.imread(str(image_path))
-        if original_image is None:
-            raise ValueError(f"Failed to load image: {image_path}")
+        if isinstance(image_input, np.ndarray):
+            # Input is already a numpy array (e.g., from fetch_map_frame)
+            original_image = image_input
+        else:
+            # Input is a file path
+            image_path = Path(image_input)
+            
+            # Validate image exists
+            if not image_path.exists():
+                raise FileNotFoundError(f"Image not found: {image_path}")
+            
+            original_image = cv2.imread(str(image_path))
+            if original_image is None:
+                raise ValueError(f"Failed to load image: {image_path}")
         
         # Get image dimensions (height, width, channels)
         img_height, img_width = original_image.shape[:2]
@@ -411,10 +416,11 @@ class PoolDetector:
         # If image is small enough (< 1.5x tile size), use standard detection
         if img_width <= tile_size * 1.5 and img_height <= tile_size * 1.5:
             logger.info("Image is small enough, using standard detection")
-            return self.detect(image_path, image_size)
+            return self.detect(original_image, image_size)
         
         logger.info(f"Large image detected ({img_width}x{img_height}), using tiled inference")
         logger.info(f"Tile size: {tile_size}, Overlap: {overlap}")
+
         
         # -------------------------------------------------------------------
         # STEP 3: Calculate tiling grid parameters

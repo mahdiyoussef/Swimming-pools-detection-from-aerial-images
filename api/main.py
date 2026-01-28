@@ -57,7 +57,7 @@ async def startup_event():
     global detector
     logger.info(f"Loading model from {MODEL_PATH}...")
     if MODEL_PATH.exists():
-        detector = PoolDetector(model_path=str(MODEL_PATH), conf_threshold=0.55)
+        detector = PoolDetector(model_path=str(MODEL_PATH), conf_threshold=0.60)
         logger.info("Model loaded successfully.")
     else:
         logger.warning(f"Model file not found at {MODEL_PATH}")
@@ -90,20 +90,37 @@ async def get_geojson(image_name: str) -> Dict:
 @app.post("/api/detect_live")
 async def detect_live(req: DetectionRequest):
     """
-    Capture a map frame and run detection in real-time.
+    Capture a high-resolution map frame and run sliding window detection.
+    
+    Uses:
+    - High-resolution tile fetching (zoom boosted by +2 levels)
+    - Sliding window (tiled) detection for accuracy on large images
+    - Non-Maximum Suppression to merge overlapping detections
     """
     if detector is None:
         raise HTTPException(status_code=503, detail="Model not loaded")
 
     try:
-        # 1. Fetch map image from coordinates
+        # 1. Fetch HIGH-RESOLUTION map image (zoom_boost=2 for 4x resolution)
+        logger.info(f"Fetching high-res tiles for bounds: N={req.north:.4f}, S={req.south:.4f}, E={req.east:.4f}, W={req.west:.4f}")
         image, origin_lat, origin_lng, mpp = fetch_map_frame(
-            req.north, req.south, req.east, req.west, req.zoom
+            req.north, req.south, req.east, req.west, req.zoom,
+            zoom_boost=2  # Boost zoom by 2 levels for higher resolution
         )
         
-        # 2. Run Inference
-        # We use standard detect since we've already stitched a reasonably sized image
-        _, raw_detections = detector.detect(image, image_size=640)
+        img_h, img_w = image.shape[:2]
+        logger.info(f"Fetched image: {img_w}x{img_h} pixels, resolution: {mpp:.4f} m/px")
+        
+        # 2. Run SLIDING WINDOW (Tiled) Inference
+        # This is critical for large high-res images where pools are small relative to image size
+        _, raw_detections = detector.detect_tiled(
+            image,
+            tile_size=512,    # Process 512x512 tiles
+            overlap=128,      # 25% overlap for better boundary detection
+            image_size=640    # YOLO inference size
+        )
+        
+        logger.info(f"Sliding window detection found {len(raw_detections)} raw detections")
         
         # 3. Process to GeoJSON
         features = []
@@ -141,6 +158,8 @@ async def detect_live(req: DetectionRequest):
                     "coordinates": [coordinates]
                 }
             })
+        
+        logger.info(f"Returning {len(features)} pool features")
             
         return {
             "type": "FeatureCollection",
@@ -148,6 +167,8 @@ async def detect_live(req: DetectionRequest):
             "metadata": {
                 "mpp": mpp,
                 "zoom": req.zoom,
+                "effective_zoom": req.zoom + 2,
+                "image_size": f"{img_w}x{img_h}",
                 "count": len(features)
             }
         }
